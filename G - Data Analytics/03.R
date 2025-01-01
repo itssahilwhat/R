@@ -116,7 +116,7 @@ library(tidyverse)
 library(skimr)
 library(janitor)
 
-hotel_bookings <- read_csv("hotel_bookings.csv")
+hotel_bookings <- read_csv("../hotel_bookings.csv")
 head(hotel_bookings)
 str(hotel_bookings)
 colnames(hotel_bookings)

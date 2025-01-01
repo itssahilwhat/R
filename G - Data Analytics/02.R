@@ -1,6 +1,6 @@
 library(tidyverse)
 
-booking_df <- read_csv("hotel_bookings.csv")
+booking_df <- read_csv("../hotel_bookings.csv")
 head(booking_df)
 str(booking_df)
 colnames(booking_df)
