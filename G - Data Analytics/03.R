@@ -110,3 +110,30 @@ bias(actual_sales, predicted_sales)
 # So, the value obtain should be near to 0
 
 rmarkdown::render("Lesson-04.txt")
+
+install.packages(c("tidyverse", "skimr", "janitor"))
+library(tidyverse)
+library(skimr)
+library(janitor)
+
+hotel_bookings <- read_csv("hotel_bookings.csv")
+head(hotel_bookings)
+str(hotel_bookings)
+colnames(hotel_bookings)
+glimpse(hotel_bookings)
+summarise(hotel_bookings, mean(adults), sd(adults), mean(children), sd(children))
+dim(hotel_bookings)
+
+hotel_bookings %>%
+  arrange(-lead_time)
+max(hotel_bookings$lead_time)
+min(hotel_bookings$lead_time)
+mean(hotel_bookings$lead_time)
+
+hotel_bookings_city <-    filter(hotel_bookings, hotel_bookings$hotel=="City Hotel")
+hotel_bookings_city
+
+hotel_summary <- hotel_bookings %>%
+  group_by(hotel) %>%
+  summarise(mean_lead_time = mean(lead_time), min_lead_time = min(lead_time), max_lead_time = max(lead_time))
+hotel_summary
