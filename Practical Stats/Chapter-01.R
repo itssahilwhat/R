@@ -91,7 +91,33 @@ graph2
 install.packages("gmodels")
 library(gmodels)
 lc_loans <- read.csv("data/lc_loans.csv")
-x_tab <- CrossTable(lc_loans$grade, lc_loans$status,
+x_tab <- CrossTable(lc_loans$grade, lc_loans$status, ## contingency table
                     prop.c=FALSE, prop.chisq=FALSE, prop.t=FALSE)
+## column proportions, chi-sqauare proportions, table-level proportions
 
+### Categorical and Numeric Data
+# Boxplots of a column can be grouped by a different column.
+airline_stats <- read.csv("data/airline_stats.csv", stringsAsFactors = FALSE)
+boxplot(pct_carrier_delay ~ airline, data=airline_stats, ylim=c(0, 50),
+        cex.axis=.6, ylab='Daily % of Delayed Flights')
 
+# Variation of boxplots called _violinplot_.
+
+graph3 <- ggplot(data=airline_stats, aes(airline, pct_carrier_delay)) +
+  geom_violin(draw_quantiles = c(.25,.5,.75), linetype=2, linewidth=1.1) +
+  coord_cartesian(ylim=c(0, 50)) +
+  labs(x='', y='Daily % of Delayed Flights') +
+  theme_bw()
+graph3
+
+### Visualizing Multiple Variables
+
+graph4 <- ggplot(subset(kc_tax0, ZipCode %in% c(98188, 98105, 98108, 98126)),
+                aes(x=SqFtTotLiving, y=TaxAssessedValue)) +
+  stat_binhex(colour='white') +
+  theme_bw() +
+  scale_fill_gradient(low='gray95', high='black') +
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+  labs(x='Finished Square Feet', y='Tax-Assessed Value') +
+  facet_wrap('ZipCode')
+graph4
