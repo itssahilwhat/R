@@ -17,16 +17,18 @@ sd(state$Population)
 IQR(state$Population)
 mad(state$Population) ## Mean Absolute Deviation
 
-## Exploring the Data Distribution
+### Percentiles and Boxplots
 quantile(state$Murder.Rate, probs = c(0.05, 0.25, 0.5, 0.75, 0.95))
 boxplot(state$Population/1000000, ylab = "Population (millions)")
 
+### Frequency Table and Histograms
 breaks <- seq(from=min(state$Population), to=max(state$Population), length=11)
 pop_freq <- cut(state$Population, breaks = breaks, right = TRUE, include.lowest = TRUE)
 table(pop_freq)
 
+### Density Estimates
+# Density is an alternative to histograms that can provide more insight into the distribution of the data points.
 hist(state[["Population"]], breaks=breaks)
-
 hist(state[["Murder.Rate"]], freq=FALSE) ## a density plot corresponds to plotting the histogram as a proportion rather
 # than counts (you specify this in R using the argument freq=FALSE).
 lines(density(state[["Murder.Rate"]]), lwd=3, col="blue")
@@ -36,3 +38,25 @@ lines(density(state[["Murder.Rate"]]), lwd=3, col="blue")
 dfw <- read_csv("data/dfw_airline.csv")
 dfw
 barplot(as.matrix(dfw)/6, cex.axis=.5)
+
+
+## Correlation
+sp500_px <- read.csv("data/sp500_data.csv", row.names=1)
+sp500_sym <- read.csv("data/sp500_sectors.csv", stringsAsFactors = FALSE)
+etfs <- sp500_px[row.names(sp500_px)>"2012-07-01",
+                 sp500_sym[sp500_sym$sector=="etf", 'symbol']]
+install.packages("corrplot")
+library(corrplot)
+corrplot(cor(etfs), method = "ellipse")
+
+telecom <- sp500_px[, sp500_sym[sp500_sym$sector == 'telecommunications_services', 'symbol']]
+telecom <- telecom[row.names(telecom) > '2012-07-01',]
+telecom_cor <- cor(telecom)
+
+### Scatterplots
+plot(telecom$T, telecom$VZ, xlab="T", ylab="VZ")
+abline(h=0, v=0, col='grey')
+dim(telecom)
+
+
+## Exploring Two or More Variables
