@@ -60,3 +60,38 @@ dim(telecom)
 
 
 ## Exploring Two or More Variables
+kc_tax <- read.csv('data/kc_tax.csv')
+kc_tax0 <- subset(kc_tax, TaxAssessedValue < 750000 & SqFtTotLiving>100 &
+  SqFtTotLiving<3500)
+nrow(kc_tax0)
+
+### Hexagonal binning and Contours
+#### Plotting numeric versus numeric data
+# If the number of data points gets large, scatter plots will no longer be meaningful. Here methods that visualize
+# densities are more useful. The `stat_hexbin` method for is one powerful approach.
+library(ggplot2)
+graph <- ggplot(kc_tax0, (aes(x=SqFtTotLiving, y=TaxAssessedValue))) +
+  stat_binhex(colour="white") +
+  theme_bw() + ## black and white theme
+  scale_fill_gradient(low="white", high="black") +
+  labs(x="Finished Square Feet", y="Tax Assessed Value")
+graph
+
+# Visualize as a two-dimensional extension of the density plot.
+
+graph2 <- ggplot(kc_tax0, aes(SqFtTotLiving, TaxAssessedValue)) +
+  theme_bw() +
+  geom_point(color='blue', alpha=0.1) +
+  geom_density2d(color='white') +
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+  labs(x='Finished Square Feet', y='Tax-Assessed Value')
+graph2
+
+### Two Categorical Variables
+install.packages("gmodels")
+library(gmodels)
+lc_loans <- read.csv("data/lc_loans.csv")
+x_tab <- CrossTable(lc_loans$grade, lc_loans$status,
+                    prop.c=FALSE, prop.chisq=FALSE, prop.t=FALSE)
+
+
