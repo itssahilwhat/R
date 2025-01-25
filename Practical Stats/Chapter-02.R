@@ -154,8 +154,9 @@ ggplot(X, aes(x = mean)) +
 # Generate a random sample of 100 values from a standard normal distribution
 norm_samp <- rnorm(100)
 
-# Create a QQ-plot to compare the quantiles of the sample to a standard normal distribution
+# Create a QQ-plot(Quantile-Quantile plot) to compare the quantiles of the sample to a standard normal distribution
 qqnorm(norm_samp, main='', xlab='Quantile of normal distribution', ylab='z-score')
+# This graph shows the points seem to follow the line closely, indicating that your data might be approximately normally distributed.
 
 # Add a reference line (diagonal line) to the QQ-plot. If the sample is normal, points will lie on this line.
 abline(a=0, b=1, col='grey')
