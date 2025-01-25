@@ -148,3 +148,80 @@ ggplot(X, aes(x = mean)) +
   annotate('text', x = sampleMean, y = 8, label = '90% interval', size = 6) +  # Annotate CI
   theme_bw() +  # Use a clean theme
   labs(x = '', y = 'Counts')  # Add axis labels
+
+# Normal Distribution - Basic Overview
+
+# Generate a random sample of 100 values from a standard normal distribution
+norm_samp <- rnorm(100)
+
+# Create a QQ-plot to compare the quantiles of the sample to a standard normal distribution
+qqnorm(norm_samp, main='', xlab='Quantile of normal distribution', ylab='z-score')
+
+# Add a reference line (diagonal line) to the QQ-plot. If the sample is normal, points will lie on this line.
+abline(a=0, b=1, col='grey')
+
+# The QQ-plot helps us assess whether the data follows a normal distribution by comparing the data’s quantiles
+# to the theoretical quantiles of a normal distribution.
+
+# Long-Tailed Distributions - Understanding Heavy Tails
+
+# Load the Netflix stock price data (from the 'sp500_px' dataset)
+# We are using the closing prices of Netflix (NFLX)
+nflx <- sp500_px[,'NFLX']
+
+# Apply log difference on the data to calculate the daily returns (logarithmic returns)
+nflx <- diff(log(nflx[nflx > 0]))
+
+# Create a QQ-plot of the NFLX returns data
+# This plot helps check if the returns follow a normal distribution
+qqnorm(nflx)
+
+# Add a reference line to assess the distribution shape
+abline(a=0, b=1, col='grey')
+
+# If the data points deviate from the line, this indicates that the distribution is not normal
+# The longer the tails, the more the points will deviate from the reference line.
+
+# Binomial Distribution
+
+# The dbinom function calculates the probability of getting exactly 'x' successes in 'size' trials
+# Here we are calculating the probability of getting exactly 2 successes in 5 trials with a success probability of 0.1.
+dbinom(x = 2, size = 5, p = 0.1)
+
+# The pbinom function calculates the cumulative probability (i.e., the probability of getting 2 or fewer successes)
+# in 5 trials with a success probability of 0.1.
+pbinom(2, 5, 0.1)
+
+# Another example of a binomial distribution:
+# The probability of getting 0 successes in 200 trials with a probability of success of 0.02.
+dbinom(x = 0, size = 200, p = 0.02)
+
+# Binomial Distribution helps model scenarios where there are two possible outcomes (like success or failure),
+# and we perform a fixed number of independent trials.
+
+# Poisson Distribution
+
+# The rpois function generates random numbers from a Poisson distribution.
+# Here, we are generating 100 random numbers with a rate (lambda) of 2.
+rpois(100, lambda = 2)
+
+# Poisson Distribution is commonly used to model count data, like the number of arrivals at a store in an hour.
+# The 'lambda' parameter is the expected rate of occurrences in a fixed interval.
+
+# Exponential Distribution
+
+# The rexp function generates random numbers from an exponential distribution.
+# Here, we generate 100 random numbers with a rate (rate) of 0.2.
+rexp(n = 100, rate = 0.2)
+
+# Exponential Distribution models the time between events in a Poisson process.
+# For example, how long we have to wait for the next customer to arrive at a store.
+
+# Weibull Distribution
+
+# The rweibull function generates random numbers from a Weibull distribution.
+# Here, we generate 100 random numbers with shape parameter 1.5 and scale parameter 5000.
+rweibull(100, 1.5, 5000)
+
+# The Weibull distribution is commonly used for reliability analysis and modeling life data,
+# such as the time until a machine breaks down or the time until a component fails.
