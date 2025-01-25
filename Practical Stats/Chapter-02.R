@@ -28,7 +28,7 @@ plot(
 polygon(x, gauss, col = 'blue')
 
 # Turn off the current plotting device
-dev.off()
+# dev.off()
 
 # Generate 1000 random samples from a standard normal distribution
 norm_samp <- rnorm(1000)
@@ -45,32 +45,106 @@ h <- hist(
 )
 h
 # Turn off the current plotting device
-dev.off()
+# dev.off()
 
-## Sampling Distribution of a Statistic
+# Sampling Distribution of a Statistic
 
-# take a simple random sample
-samp_data <- data.frame(income=sample(loans_income, 1000),
-                        type='data_dist')
+# Take a simple random sample of 1000 values from the loans_income dataset
+samp_data <- data.frame(
+  income = sample(loans_income, 1000),  # Random sample of 1000 values
+  type = 'data_dist'                   # Label for the data type
+)
 
-# take a sample of means of 5 values
+# Take a sample of means of 5 values (1000 groups, each with 5 samples)
 samp_mean_05 <- data.frame(
-  income = tapply(sample(loans_income, 1000*5),
-                  rep(1:1000, rep(5, 1000)), FUN=mean),
-  type = 'mean_of_5')
+  income = tapply(
+    sample(loans_income, 1000 * 5),              # Randomly sample 5000 values
+    rep(1:1000, rep(5, 1000)),                  # Create 1000 groups, each with 5 samples
+    FUN = mean                                  # Calculate the mean of each group
+  ),
+  type = 'mean_of_5'                            # Label for the data type
+)
 
-# take a sample of means of 20 values
+# Take a sample of means of 20 values (1000 groups, each with 20 samples)
 samp_mean_20 <- data.frame(
-  income = tapply(sample(loans_income, 1000*20),
-                  rep(1:1000, rep(20, 1000)), FUN=mean),
-  type = 'mean_of_20')
+  income = tapply(
+    sample(loans_income, 1000 * 20),            # Randomly sample 20000 values
+    rep(1:1000, rep(20, 1000)),                # Create 1000 groups, each with 20 samples
+    FUN = mean                                  # Calculate the mean of each group
+  ),
+  type = 'mean_of_20'                           # Label for the data type
+)
 
-# bind the data.frames and convert type to a factor
+# Combine all the datasets into a single data frame
 income <- rbind(samp_data, samp_mean_05, samp_mean_20)
-income$type <- factor(income$type,
-                      levels=c('data_dist', 'mean_of_5', 'mean_of_20'),
-                      labels=c('Data', 'Mean of 5', 'Mean of 20'))
 
-ggplot(income, aes(x=income)) +
-  geom_histogram(bins=40) +
-  facet_grid(type ~ .)
+# Convert the 'type' column into a factor for better visualization
+income$type <- factor(
+  income$type,
+  levels = c('data_dist', 'mean_of_5', 'mean_of_20'),  # Original labels
+  labels = c('Data', 'Mean of 5', 'Mean of 20')       # Human-readable labels
+)
+
+dev.new()
+# Plot the histogram using ggplot2
+ggplot(income, aes(x = income)) +
+  geom_histogram(bins = 40) +         # Create histograms with 40 bins
+  facet_grid(type ~ .)                # Separate plots for each type of data distribution
+
+## The Bootstrap
+# Define a function to calculate the statistic (median in this case)
+stat_fun <- function(x, idx) {
+  median(x[idx])  # Compute the median of the resampled data
+}
+
+# Perform the bootstrap with 1000 resamples
+boot_obj <- boot(loans_income, R = 1000, statistic = stat_fun)
+
+# Display the bootstrap results
+boot_obj
+
+## Confidence Intervals
+# Set random seeds for reproducibility
+set.seed(5)
+set.seed(7)
+
+# Take a random sample of 20 observations from the data
+sample20 <- sample(loans_income, 20)
+
+# Calculate the mean of the sample
+sampleMean <- mean(sample20)
+
+# Define a function to calculate the mean for bootstrap resamples
+stat_fun <- function(x, idx) {
+  mean(x[idx])  # Compute the mean of the resampled data
+}
+
+# Perform the bootstrap with 500 resamples
+boot_obj <- boot(sample20, R = 500, statistic = stat_fun)
+
+# Compute the 90% confidence interval
+boot_ci <- boot.ci(boot_obj, conf = 0.9, type = 'basic')
+
+# Extract the confidence interval values
+ci90 <- boot_ci$basic[4:5] # 4 and 5 are the indices for the lower and upper bounds
+ci <- data.frame(ci = ci90, y = c(9, 11)) # This helps create a horizontal line for the CI at a specific height in the plot.
+
+
+
+# Display the confidence interval
+ci
+
+# Create a data frame for bootstrap means
+X <- data.frame(mean = boot_obj$t)
+
+# Plot the bootstrap distribution of means with the confidence interval
+ggplot(X, aes(x = mean)) +
+  geom_histogram(bins = 40, fill = '#AAAAAA') +  # Histogram of bootstrap means
+  geom_vline(xintercept = sampleMean, linetype = 2) +  # Sample mean as a dashed line
+  geom_path(aes(x = ci, y = 10), data = ci, size = 2) +  # Confidence interval line
+  geom_path(aes(x = ci90[1], y = y), data = ci, size = 2) +  # Lower CI bound
+  geom_path(aes(x = ci90[2], y = y), data = ci, size = 2) +  # Upper CI bound
+  annotate('text', x = sampleMean, y = 20, label = 'Sample mean', size = 6) +  # Annotate sample mean
+  annotate('text', x = sampleMean, y = 8, label = '90% interval', size = 6) +  # Annotate CI
+  theme_bw() +  # Use a clean theme
+  labs(x = '', y = 'Counts')  # Add axis labels

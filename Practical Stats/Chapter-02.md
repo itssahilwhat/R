@@ -237,3 +237,197 @@ If new samples aren’t available, use the **Bootstrap Method**:
 
 **Resource for Visuals and Simulations**: [David Lane's Statistics Resource](http://onlinestatbook.com/)
 
+### The Bootstrap (Simplified)
+
+The **bootstrap** is a method used to estimate the variability of a statistic (like the mean or median) or model parameters by repeatedly sampling **with replacement** from the original data. It is powerful because it doesn't require any assumptions about the data's distribution (e.g., normality).
+
+---
+
+#### Key Terms:
+1. **Bootstrap Sample**: A sample taken with replacement from the original data.
+2. **Resampling**: Repeatedly sampling from the observed data, which can involve **bootstrapping** (with replacement) or **permutation** (without replacement).
+
+---
+
+#### How the Bootstrap Works:
+1. Imagine you could replicate your sample thousands of times to create a hypothetical population.
+2. From this hypothetical population, you take many random samples to create a **sampling distribution**.
+3. Instead of actually replicating the sample, the bootstrap achieves the same result by sampling **with replacement** from the original data.
+
+---
+
+#### Bootstrap Algorithm (Step-by-Step):
+1. **Take a Sample**: Randomly pick a value from the original data, record it, and put it back (sampling **with replacement**).
+2. **Repeat**: Continue this until you've selected the same number of values as the original sample (\( n \)).
+3. **Calculate Statistic**: Compute the statistic (e.g., mean or median) for the resampled data.
+4. **Repeat R Times**: Repeat steps 1–3 \( R \) times to create \( R \) bootstrap statistics.
+5. **Analyze Results**: Use the bootstrap statistics to:
+    - Estimate the **standard error** of the statistic:  
+      \[
+      SE = \text{Standard Deviation of Bootstrap Statistics}
+      \]
+    - Create a **histogram** or **boxplot**.
+    - Calculate **confidence intervals**.
+
+---
+
+#### Important Notes:
+- **Number of Iterations (\( R \))**: The higher the number of iterations, the more accurate your results will be.
+- **Standard Error (SE)**: Tells how much the statistic varies across samples and is calculated as:  
+  \[
+  SE = \sqrt{\frac{\sum_{i=1}^R (\text{Bootstrap Statistic}_i - \text{Mean of Bootstrap Statistics})^2}{R - 1}}
+  \]
+
+---
+
+#### Applications of Bootstrap:
+1. **Estimate Variability**: Helps assess how much a statistic (e.g., mean, median) changes across samples.
+2. **Confidence Intervals**: Allows calculation of intervals where the true statistic is likely to lie.
+3. **Model Stability**: Evaluates how stable model parameters are when applied to different data samples.
+4. **Bagging**: Combines predictions from multiple bootstrap samples (used in Random Forests) to improve accuracy.
+
+---
+
+#### Limitations:
+- The bootstrap **does not create new data** or fix small sample sizes.
+- It only helps estimate how the statistic would behave if many additional samples were drawn from a similar population.
+
+---
+
+#### Further Reading:
+- **Book**: *An Introduction to the Bootstrap* by Bradley Efron and Robert Tibshirani.
+- **Resource**: [Onlinestatbook.com](http://onlinestatbook.com/).
+
+### Confidence Intervals Simplified
+
+A **confidence interval (CI)** is a range of values used to estimate the true value of a population parameter (e.g., mean or proportion). Instead of giving a single estimate (called a **point estimate**), a confidence interval provides a range to account for uncertainty in the estimate.
+
+---
+
+#### Key Terms
+1. **Confidence Level**: The percentage (e.g., 90%, 95%) that represents how often the interval will contain the true value if we repeated the sampling process many times.
+    - Example: A 90% CI means that in 90 out of 100 samples, the interval will contain the true population parameter.
+
+2. **Interval Endpoints**: The upper and lower bounds of the confidence interval.
+
+---
+
+#### Why Use Confidence Intervals?
+People often overtrust single numbers. Confidence intervals remind us there’s **uncertainty** in our estimates.
+- Higher confidence levels require wider intervals (to be more sure).
+- Smaller sample sizes lead to wider intervals (less data = more uncertainty).
+
+---
+
+#### How to Calculate Confidence Intervals (Bootstrap Method):
+The **bootstrap method** creates confidence intervals by resampling the data:
+
+1. Take your sample of size \(n\).
+2. Randomly resample the data (with replacement) \(R\) times to create many new samples.
+3. Calculate the statistic of interest (e.g., mean) for each resample.
+4. Trim \(\frac{1 - \text{Confidence Level}}{2}\)% from both ends of the resampled results.
+5. The remaining range is the confidence interval.
+
+---
+
+#### Example:
+If we calculate a 90% CI for the **mean annual income** of loan applicants from a sample:
+- Mean = $57,573
+- 90% CI = Range enclosing 90% of bootstrap resamples of the mean.
+
+---
+
+#### Important Notes:
+- The **confidence level** indicates how confident we are in the interval (higher confidence = wider interval).
+- A **smaller sample** = more variability, leading to wider confidence intervals.
+- **Confidence intervals** show how variable the sample result might be but don’t directly answer "what is the probability of the true value?"
+
+---
+
+#### Useful Formulas:
+1. **Confidence Interval for Mean (using standard error and t-distribution)**:  
+   \[
+   \text{CI} = \bar{x} \pm t^* \cdot \frac{s}{\sqrt{n}}
+   \]
+    - \(\bar{x}\): Sample mean
+    - \(t^*\): Critical value from the t-distribution
+    - \(s\): Sample standard deviation
+    - \(n\): Sample size
+
+2. **For Proportions (using z-distribution)**:  
+   \[
+   \text{CI} = \hat{p} \pm z^* \cdot \sqrt{\frac{\hat{p}(1 - \hat{p})}{n}}
+   \]
+    - \(\hat{p}\): Sample proportion
+    - \(z^*\): Critical value from the z-distribution
+
+---
+
+#### Practical Applications for Data Scientists:
+- Use CIs to communicate **uncertainty** in estimates to managers or clients.
+- Helps decide if you need **more data** to narrow the interval.
+- Use bootstrap CIs for flexibility in most statistics and models.
+
+---
+
+#### Further Reading:
+- [**Introductory Statistics and Analytics: A Resampling Perspective** by Peter Bruce](https://www.wiley.com)
+- [**Statistics** by Robin Lock and Family](https://www.wiley.com)
+- [**Modern Engineering Statistics** by Tom Ryan](https://www.wiley.com)
+
+Confidence intervals are critical for understanding variability, especially when making decisions based on sample data!  
+
+### Normal Distribution (Simplified)
+
+**Definition:**  
+The normal distribution, also called the bell curve or Gaussian distribution, is a symmetric curve where most data points are near the average (mean), and fewer are at the extremes.
+
+**Key Facts:**
+- **Shape:** Bell-shaped curve.
+- **Centered:** Mean = Median = Mode.
+- **Spread:** 68% of data lies within 1 standard deviation, and 95% lies within 2 standard deviations of the mean.
+
+**Key Terms:**
+1. **Error:** Difference between actual value and predicted/average value.
+2. **Standardization:** Subtract the mean and divide by the standard deviation.
+    - Formula:  
+      \[
+      z = \frac{x - \mu}{\sigma}
+      \]  
+      Where \(x\) = data point, \(\mu\) = mean, \(\sigma\) = standard deviation.
+3. **Z-score:** The standardized value of a data point.
+4. **Standard Normal:** A normal distribution with mean \(= 0\) and standard deviation \(= 1\).
+5. **QQ-Plot:** A visual way to check if data follows a normal distribution. Data close to a diagonal line suggests normality.
+
+---
+
+### Warnings:
+- **Misconception:** Not all data is normally distributed; many real-world datasets are not.
+- **Transformation:** Standardizing (converting to z-scores) does not make data normally distributed.
+
+---
+
+### Long-Tailed Distributions
+**Definition:** A distribution with "tails" (extreme values) that are longer and heavier than a normal distribution.
+
+**Key Points:**
+- **Skewed Data:** Many real-world datasets are skewed (not symmetric).
+- **Extreme Events:** Long tails mean extreme events (like stock market crashes) are more likely than the normal distribution predicts.
+
+---
+
+### Practical Examples:
+1. **Normal Distribution:** Used for errors in measurements, averages, or large samples.
+2. **Long-Tailed Data:** Examples include income, stock market returns, or internet traffic.
+
+---
+
+### Key Ideas:
+- Normal distribution is a fundamental tool in statistics, but most raw data doesn’t follow it.
+- Extreme events (black swans) are underestimated by assuming normality.
+
+---
+
+**Further Reading:**
+1. *The Black Swan* by Nassim Taleb.
+2. *Handbook of Statistical Distributions with Applications* by K. Krishnamoorthy.
